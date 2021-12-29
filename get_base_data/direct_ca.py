@@ -8,12 +8,13 @@ import requests
 import json
 import sys
 import os
+import urllib3
 sys.path.append("D:\myfiles\code\\third_party_depen_analyze_final")
 sys.path.append("../")
 from utils import base_function
 
 DEST_FILEPATH="../data/direct_ca/"
-
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def https_visit(domain):
     """
@@ -155,7 +156,7 @@ def get_all_ca_data(all_https_data):
             all_ca_data[domain]["rank"] = rank
             #print(all_ca_data[domain])
         sleep(2)
-    filename=DEST_FILEPATH+"ca.txt"
+    filename=DEST_FILEPATH+"all_ca_data.txt"
     with open(filename,"w") as f:
         json.dump(all_ca_data,f,indent=2)
     return all_ca_data
@@ -244,14 +245,14 @@ def analyze_ca_critical(result):
     return result
 
 def main():
-    # print("-----load rank data-----")
-    # rank_data=base_function.load_rank_data()
-    # print("-----get https support data-----")
-    # all_https_support_data=get_all_https_support_data(rank_data)
-    # print("-----get all ca data-----")
-    # result=get_all_ca_data(all_https_support_data)
-    with open(DEST_FILEPATH+"ca.txt","r") as f:
-        result=json.load(f)
+    print("-----load rank data-----")
+    rank_data=base_function.load_rank_data()
+    print("-----get https support data-----")
+    all_https_support_data=get_all_https_support_data(rank_data)
+    print("-----get all ca data-----")
+    result=get_all_ca_data(all_https_support_data)
+    # with open(DEST_FILEPATH+"ca.txt","r") as f:
+    #     result=json.load(f)
     print("-----analyze ca third-----")
     result=analyze_ca_third(result)
     print("-----analyze ca critical-----")

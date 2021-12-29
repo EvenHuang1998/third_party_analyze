@@ -63,7 +63,7 @@ def get_all_ns(rank_data):
         all_ns[domain]["ns_list"]=ns_list
         sleep(1)
         
-    filename=DEST_FILEPATH+"ns.txt"
+    filename=DEST_FILEPATH+"all_ns.txt"
     with open(filename,"w") as f:
         json.dump(all_ns,f,indent=2)
     return all_ns
@@ -77,7 +77,7 @@ def get_ns_entity(all_ns,result):
     """
     for domain, ns_info in all_ns.items():
         rank=ns_info["rank"]
-        print(domain)
+        print(rank,domain)
         ns_list=ns_info["ns_list"]
         divider = base_function.NsDivider(ns_list)
         divider.divide()
@@ -87,7 +87,6 @@ def get_ns_entity(all_ns,result):
     with open(filename,"w") as f:
         json.dump(result,f,indent=2)
     return result
-
 
 def get_ns_entity_name(result):
     """
@@ -153,10 +152,8 @@ def main():
     rank_data = base_function.load_rank_data()
     print("-----get all ns-----")
     all_ns = get_all_ns(rank_data)
-   
     print("-----get all ns entity-----")
     result=get_ns_entity(all_ns,result)
-
     print("-----get all ns entity name-----")
     result=get_ns_entity_name(result)
     print("-----analyze ns private-----")
@@ -164,7 +161,7 @@ def main():
     print("-----analyze ns critical-----")
     result=analyze_ns_critical(result)
     print("-----store ns data-----")
-    filename=DEST_FILEPATH+"all_ns_data_new.txt"
+    filename=DEST_FILEPATH+"all_ns_data.txt"
     with open(filename,"w") as f:
         json.dump(result,f,indent=2)
     print("-----finish ns-----")

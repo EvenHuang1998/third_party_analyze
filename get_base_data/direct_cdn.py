@@ -67,8 +67,8 @@ class InternalUrlObtainner(object):
         options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--headless')
 
-        #self.driver = webdriver.Chrome(PATH_TO_CHROMEDRIVER, options=options)
-        self.driver=webdriver.Chrome(options=options)
+        self.driver = webdriver.Chrome(PATH_TO_CHROMEDRIVER, options=options)
+        #self.driver=webdriver.Chrome(options=options)
 
     def load_ca_dict(self):
         self.ca_dict = base_function.load_ca()
@@ -255,25 +255,25 @@ def get_cname_and_cdn_data(rank_data):
     cdn_data=defaultdict(dict)
 
     for rank,domain in rank_data.items():
-        if int(rank)>=12000 and int(rank)<=15000:
-            print(rank, domain)
-            link_list = url_obtainner.get_landing_page_internal_url(domain)
-            if not link_list:
-                continue
-            cname_set = set()
-            for link in link_list:
-                cname_list = cdn_extractor.recursively_get_cname(link)
-                cname_set = cname_set.union(cname_list)
-            cdn_list = cdn_extractor.map_cname_list_to_cdn(list(cname_set))
-            cdn_set = set(cdn_list)
-            if cdn_set:
-                cdn_data[domain]["rank"] = rank
-                cdn_data[domain]["cdn"] = list(cdn_set)
-                #cdn_data[domain]["cname"] = list(cname_set)
-            if int(rank)%1000==0:
-                filename = DEST_FILEPATH+"cdn_entity_name_top_"+rank+".txt"
-                with open(filename, "w") as f:
-                    json.dump(cdn_data, f, indent=2)
+    
+        print(rank, domain)
+        link_list = url_obtainner.get_landing_page_internal_url(domain)
+        if not link_list:
+            continue
+        cname_set = set()
+        for link in link_list:
+            cname_list = cdn_extractor.recursively_get_cname(link)
+            cname_set = cname_set.union(cname_list)
+        cdn_list = cdn_extractor.map_cname_list_to_cdn(list(cname_set))
+        cdn_set = set(cdn_list)
+        if cdn_set:
+            cdn_data[domain]["rank"] = rank
+            cdn_data[domain]["cdn"] = list(cdn_set)
+            #cdn_data[domain]["cname"] = list(cname_set)
+        if int(rank)%1000==0:
+            filename = DEST_FILEPATH+"cdn_entity_name_top_"+rank+".txt"
+            with open(filename, "w") as f:
+                json.dump(cdn_data, f, indent=2)
     filename=DEST_FILEPATH+"cdn_entity_name.txt"
     with open(filename,"w") as f:
         json.dump(cdn_data,f,indent=2)
@@ -315,12 +315,10 @@ def main():
     rank_data = base_function.load_rank_data()
     # print("-----get internal link data-----")
     # internal_link_data=get_internal_link_data(rank_data)
-    # print("-----get cdn data-----")
-    # result=get_cname_and_cdn_data(internal_link_data)
-    # print("-----get cdn data-----")
-    # result=get_cname_and_cdn_data(rank_data)
-    with open("../data/direct_cdn/all_cdn_data.txt","r") as f:
-        result=json.load(f)
+    print("-----get cdn data-----")
+    result=get_cname_and_cdn_data(rank_data)
+    # with open("../data/direct_cdn/all_cdn_data.txt","r") as f:
+    #     result=json.load(f)
     print("-----analyze cdn third-----")
     result=analyze_cdn_third(result)
     print("-----analyze cdn critical-----")
