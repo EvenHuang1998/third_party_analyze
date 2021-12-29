@@ -1,0 +1,26 @@
+0.创建目录结构树：
+/analyze
+/data
+/data/direct_ca
+/data/direct_cdn
+/data/direct_ns
+/data/website_rank
+
+1.格式化网站排名数据为：命名为formated_website_rank.txt
+{
+    1:"baidu.com",
+    2:"qq.com"
+}
+
+2.获取网站的基础数据：注意！direct_ca.py需要在ubuntu环境下运行
+运行get_base_data下的get_soa.py、direct_ns.py、direct_ca.py、direct_cdn.py
+
+3.直接依赖分析
+运行analyze下的direct_ns_analyze.py、direct_ca_analyze.py、direct_cdn_analyze.py
+运行analyze下的get_cdf.py
+
+4.间接依赖分析
+运行analyze下的indirect_ca_cdn_analyze.py、indirect_ca_ns_analyze.py、indirect_cdn_ns_analyze.py
+
+5.画图
+运行plot下的所有脚本
